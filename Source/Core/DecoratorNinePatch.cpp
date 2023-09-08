@@ -90,6 +90,7 @@ DecoratorDataHandle DecoratorNinePatch::GenerateElementData(Element* element) co
 	// display scale (determined by eg. the inverse of spritesheet's 'src-scale').
 	const float scale_raw_to_natural_dimensions = ElementUtilities::GetDensityIndependentPixelRatio(element) * display_scale;
 
+	Log::Message(Log::LT_INFO, "scale_raw_to_natural_dimensions %f %f", scale_raw_to_natural_dimensions, display_scale);
 	// Surface position in pixels [0, surface_dimensions]
 	// Need to keep the corner patches at their natural size, but stretch the inner patches.
 	Vector2f surface_pos[4];

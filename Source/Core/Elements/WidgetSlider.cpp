@@ -92,15 +92,17 @@ WidgetSlider::~WidgetSlider()
 bool WidgetSlider::Initialise()
 {
 	// Create all of our child elements as standard elements, and abort if we can't create them.
+	ElementPtr progress_element = Factory::InstanceElement(parent, "*", "sliderprogress", XMLAttributes());
 	ElementPtr track_element = Factory::InstanceElement(parent, "*", "slidertrack", XMLAttributes());
 	ElementPtr bar_element = Factory::InstanceElement(parent, "*", "sliderbar", XMLAttributes());
 	ElementPtr arrow0_element = Factory::InstanceElement(parent, "*", "sliderarrowdec", XMLAttributes());
 	ElementPtr arrow1_element = Factory::InstanceElement(parent, "*", "sliderarrowinc", XMLAttributes());
 
-	if (!track_element || !bar_element || !arrow0_element || !arrow1_element)
+	if (!track_element || !bar_element || !arrow0_element || !arrow1_element || !progress_element)
 		return false;
 
 	// Add them as non-DOM elements.
+	progress = parent->AppendChild(std::move(progress_element), false);
 	track = parent->AppendChild(std::move(track_element), false);
 	bar = parent->AppendChild(std::move(bar_element), false);
 	arrows[0] = parent->AppendChild(std::move(arrow0_element), false);
@@ -284,6 +286,7 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 	// Now the track has been sized, we can fix everything into position.
 	track_box.SetContent(content);
 	track->SetBox(track_box);
+	progress->SetBox(track_box);
 
 	if (orientation == VERTICAL)
 	{
@@ -294,6 +297,7 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 		offset.y += arrows[0]->GetBox().GetSize(BoxArea::Border).y + arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Bottom) +
 			track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
 		track->SetOffset(offset, parent);
+		progress->SetOffset(offset, parent);
 
 		offset.x = arrows[1]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
 		offset.y += track->GetBox().GetSize(BoxArea::Border).y + track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Bottom) +
@@ -309,6 +313,7 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 			track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
 		offset.y = track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
 		track->SetOffset(offset, parent);
+		progress->SetOffset(offset, parent);
 
 		offset.x += track->GetBox().GetSize(BoxArea::Border).x + track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Right) +
 			arrows[1]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
@@ -323,6 +328,7 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 		// Propagate disabled state to child elements
 		bar->SetPseudoClass("disabled", true);
 		track->SetPseudoClass("disabled", true);
+		progress->SetPseudoClass("disabled", true);
 		arrows[0]->SetPseudoClass("disabled", true);
 		arrows[1]->SetPseudoClass("disabled", true);
 	}
@@ -561,6 +567,11 @@ void WidgetSlider::PositionBar()
 				bar->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top),
 			},
 			parent);
+
+
+		auto progress_box = progress->GetBox();
+		progress_box.x = track->traversable_track_length * bar_position;
+		progress->SetBox(progress_box);
 	}
 }
 
