@@ -42,7 +42,7 @@ DecoratorTiled::DecoratorTiled() {}
 
 DecoratorTiled::~DecoratorTiled() {}
 
-static const Vector2f oriented_texcoords[4][2] = {
+static const Vector2f oriented_texcoords[4][2] = { 
 	{Vector2f(0, 0), Vector2f(1, 1)}, // ORIENTATION_NONE
 	{Vector2f(1, 0), Vector2f(0, 1)}, // FLIP_HORIZONTAL
 	{Vector2f(0, 1), Vector2f(1, 0)}, // FLIP_VERTICAL
