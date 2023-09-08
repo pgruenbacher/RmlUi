@@ -86,15 +86,18 @@ DecoratorDataHandle DecoratorTiledVertical::GenerateElementData(Element* element
 	const Vector2f offset = element->GetBox().GetPosition(paint_area);
 	const Vector2f size = element->GetBox().GetSize(paint_area);
 
+
 	Vector2f top_dimensions = tiles[TOP].GetNaturalDimensions(element);
 	Vector2f bottom_dimensions = tiles[BOTTOM].GetNaturalDimensions(element);
 	Vector2f centre_dimensions = tiles[CENTRE].GetNaturalDimensions(element);
 
+	Log::Message(Log::LT_INFO, "tbottom_dimensions %f %f %f", tiles[BOTTOM].display_scale, top_dimensions[0], top_dimensions[1]);
 	// Scale the tile sizes by the width scale.
 	ScaleTileDimensions(top_dimensions, size.x, Axis::Horizontal);
 	ScaleTileDimensions(bottom_dimensions, size.x, Axis::Horizontal);
 	ScaleTileDimensions(centre_dimensions, size.x, Axis::Horizontal);
 
+	Log::Message(Log::LT_INFO, "tbottom_dimensions_scaled %f %f %f", tiles[BOTTOM].display_scale, top_dimensions[0], top_dimensions[1]);
 	// Round the outer tile heights now so that we don't get gaps when rounding again in GenerateGeometry.
 	top_dimensions.y = Math::Round(top_dimensions.y);
 	bottom_dimensions.y = Math::Round(bottom_dimensions.y);
