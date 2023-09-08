@@ -127,6 +127,8 @@ private:
 
 	// The background track element, across which the bar slides.
 	Element* track;
+	// The progress element which will be scissored based on bar position
+	Element* progress;
 	// The bar element. This is the element that is dragged across the trough.
 	Element* bar;
 	// The two (optional) buttons for incrementing and decrementing the slider.
