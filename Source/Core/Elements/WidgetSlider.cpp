@@ -283,7 +283,13 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 	// Now the track has been sized, we can fix everything into position.
 	track_box.SetContent(content);
 	track->SetBox(track_box);
-	progress->SetBox(track_box);
+
+	{
+		Box progress_box;
+		ElementUtilities::BuildBox(progress_box, parent_box.GetSize(), progress);
+		progress_box.SetContent(content);
+		progress->SetBox(progress_box);
+	}
 
 	if (orientation == VERTICAL)
 	{
@@ -294,7 +300,6 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 		offset.y += arrows[0]->GetBox().GetSize(BoxArea::Border).y + arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Bottom) +
 			track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
 		track->SetOffset(offset, parent);
-		progress->SetOffset(offset, parent);
 
 		offset.x = arrows[1]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
 		offset.y += track->GetBox().GetSize(BoxArea::Border).y + track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Bottom) +
@@ -306,17 +311,28 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 		Vector2f offset(arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left), arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top));
 		arrows[0]->SetOffset(offset, parent);
 
+		{
+			// using the margin properties of the progress bar css it should usually have same offset as the track
+			auto progress_offset = offset;
+			progress_offset.x += arrows[0]->GetBox().GetSize(BoxArea::Border).x + arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Right) +
+				progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
+			// Log::Message(Log::LT_INFO, "Progress offset? %f %f", progress_offset.x, progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left));
+			progress_offset.y = progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
+			progress->SetOffset(progress_offset, parent); // overlap with track
+			// Log::Message(Log::LT_INFO, "progress offset rel after %f", progress->GetRelativeOffset().x);
+		}
+
 		offset.x += arrows[0]->GetBox().GetSize(BoxArea::Border).x + arrows[0]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Right) +
 			track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
 		offset.y = track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
 		track->SetOffset(offset, parent);
-		progress->SetOffset(offset, parent);
 
 		offset.x += track->GetBox().GetSize(BoxArea::Border).x + track->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Right) +
 			arrows[1]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
 		offset.y = arrows[1]->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
 		arrows[1]->SetOffset(offset, parent);
 	}
+
 
 	FormatBar();
 
@@ -523,6 +539,7 @@ float WidgetSlider::AbsolutePositionToBarPosition(float absolute_position) const
 
 		float traversable_track_length =
 			track->GetBox().GetSize(BoxArea::Content).y - bar->GetBox().GetSize(BoxArea::Border).y - edge_top - edge_bottom;
+		
 		if (traversable_track_length > 0)
 		{
 			float traversable_track_origin = track->GetAbsoluteOffset().y + edge_top;
@@ -551,6 +568,23 @@ void WidgetSlider::PositionBar()
 				track->GetRelativeOffset().y + edge_top + traversable_track_length * bar_position,
 			},
 			parent);
+
+		{	
+
+			progress->SetOffset(
+				Vector2f{
+					progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left),
+					bar->GetRelativeOffset().y  + (0.5*bar->GetBox().GetSize().y)
+				},
+			parent);
+
+			Box progress_box = progress->GetBox();
+			auto content = progress_box.GetSize();
+			content.y = track->GetBox().GetSize(BoxArea::Border).y - progress->GetRelativeOffset().y + track->GetRelativeOffset(BoxArea::Border).y;
+			// Log::Message(Log::LT_INFO, "content.y %f tracsize %f progressoffset %f toffset %f", content.y, track->GetBox().GetSize().y, progress->GetRelativeOffset().y, track->GetRelativeOffset().y);
+			progress_box.SetContent(content);
+			progress->SetBox(progress_box);
+		}
 	}
 	else
 	{
@@ -563,12 +597,15 @@ void WidgetSlider::PositionBar()
 				track->GetRelativeOffset().x + edge_left + traversable_track_length * bar_position,
 				bar->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top),
 			},
-			parent);
+			parent);	
 
-
-		auto progress_box = progress->GetBox();
-		progress_box.x = track->traversable_track_length * bar_position;
-		progress->SetBox(progress_box);
+		{	
+			Box progress_box = progress->GetBox();
+			auto content = progress_box.GetSize();
+			content.x = bar->GetRelativeOffset().x + (0.5*bar->GetBox().GetSize().x) - progress->GetRelativeOffset().x;
+			progress_box.SetContent(content);
+			progress->SetBox(progress_box);
+		}
 	}
 }
 

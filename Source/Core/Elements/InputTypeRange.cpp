@@ -83,8 +83,9 @@ bool InputTypeRange::OnAttributeChange(const ElementAttributes& changed_attribut
 		widget->SetMaxValue(it_max->second.Get(100.f));
 
 	auto it_value = changed_attributes.find("value");
-	if (it_value != changed_attributes.end())
+	if (it_value != changed_attributes.end()) {
 		widget->SetValue(it_value->second.Get(0.0f));
+	}
 
 	return !dirty_layout;
 }
