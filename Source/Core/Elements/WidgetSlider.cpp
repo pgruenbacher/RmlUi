@@ -287,8 +287,9 @@ void WidgetSlider::FormatElements(const Vector2f containing_block, float slider_
 	{
 		Box progress_box;
 		ElementUtilities::BuildBox(progress_box, parent_box.GetSize(), progress);
-		progress_box.SetContent(content);
+		// progress_box.SetContent(content);
 		progress->SetBox(progress_box);
+		// Log::Message(Log::LT_INFO, "progress size %f", progress_box.GetSize().y);
 	}
 
 	if (orientation == VERTICAL)
@@ -377,7 +378,7 @@ void WidgetSlider::ProcessEvent(Event& event)
 {
 	if (parent->IsDisabled())
 		return;
-
+ 
 	switch (event.GetId())
 	{
 	case EventId::Mousedown:
@@ -580,7 +581,7 @@ void WidgetSlider::PositionBar()
 
 			Box progress_box = progress->GetBox();
 			auto content = progress_box.GetSize();
-			content.y = track->GetBox().GetSize(BoxArea::Border).y - progress->GetRelativeOffset().y + track->GetRelativeOffset(BoxArea::Border).y;
+			content.y = track->GetBox().GetSize(BoxArea::Border).y - progress->GetRelativeOffset().y + track->GetRelativeOffset(BoxArea::Border).y - progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Bottom);
 			// Log::Message(Log::LT_INFO, "content.y %f tracsize %f progressoffset %f toffset %f", content.y, track->GetBox().GetSize().y, progress->GetRelativeOffset().y, track->GetRelativeOffset().y);
 			progress_box.SetContent(content);
 			progress->SetBox(progress_box);
