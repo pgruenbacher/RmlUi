@@ -75,6 +75,12 @@ public:
 	{
 		return RegisterMemberGetter(name, member_get_func_ptr);
 	}
+	// allow for const get
+	template <typename ReturnType>
+	bool RegisterMember(const String& name, ReturnType (Object::*member_get_func_ptr)() const)
+	{
+		return RegisterMemberGetter(name, member_get_func_ptr);
+	}
 
 	/// Register member getter and setter functions. The getter and setter functions must return and assign scalar value types.
 	/// @note Underlying type must be registered before it is used as a member.
@@ -102,6 +108,7 @@ public:
 
 	explicit operator bool() const { return type_register && struct_definition; }
 
+
 private:
 	// Member getter with reference return type.
 	template <typename ReturnType>
@@ -115,6 +122,15 @@ private:
 	bool RegisterMemberGetter(const String& name, ReturnType* (Object::*member_get_func_ptr)())
 	{
 		return CreateMemberGetFuncDefinition<ReturnType>(name, member_get_func_ptr);
+	}
+
+
+	// Member getter with value return type, only valid for scalar return types. Using const modifier
+	template <typename ReturnType>
+	bool RegisterMemberGetter(const String& name, ReturnType (Object::*member_get_func_ptr)() const)
+	{
+		using SetType = VoidMemberFunc Object::*;
+		return CreateMemberScalarGetSetFuncDefinition<ReturnType>(name, member_get_func_ptr, SetType{});
 	}
 
 	// Member getter with value return type, only valid for scalar return types.
