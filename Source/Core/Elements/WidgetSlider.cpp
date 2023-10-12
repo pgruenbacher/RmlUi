@@ -578,7 +578,7 @@ void WidgetSlider::PositionBar()
 			progress->SetOffset(
 				Vector2f{
 					progress->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left),
-					bar->GetRelativeOffset().y  + (0.5*bar->GetBox().GetSize().y)
+					bar->GetRelativeOffset().y  + (0.5f*bar->GetBox().GetSize().y)
 				},
 			parent);
 
@@ -606,7 +606,7 @@ void WidgetSlider::PositionBar()
 		{	
 			Box progress_box = progress->GetBox();
 			auto content = progress_box.GetSize();
-			content.x = bar->GetRelativeOffset().x + (0.5*bar->GetBox().GetSize().x) - progress->GetRelativeOffset().x;
+			content.x = bar->GetRelativeOffset().x + (0.5f*bar->GetBox().GetSize().x) - progress->GetRelativeOffset().x;
 			progress_box.SetContent(content);
 			progress->SetBox(progress_box);
 		}
