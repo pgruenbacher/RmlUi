@@ -50,7 +50,7 @@ public:
 
 	void AddView(DataViewPtr view);
 	void AddController(DataControllerPtr controller);
-
+	bool RegisterConstant(const String& name, Variant variant);
 	bool BindVariable(const String& name, DataVariable variable);
 	bool BindFunc(const String& name, DataGetFunc get_func, DataSetFunc set_func);
 
@@ -87,6 +87,7 @@ private:
 	UniquePtr<DataControllers> controllers;
 
 	UnorderedMap<String, DataVariable> variables;
+	UnorderedMap<String, Variant> constants;
 	DirtyVariables dirty_variables;
 
 	UnorderedMap<String, UniquePtr<FuncDefinition>> function_variable_definitions;
