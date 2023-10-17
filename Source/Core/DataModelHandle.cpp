@@ -60,6 +60,11 @@ DataModelHandle DataModelConstructor::GetModelHandle() const
 	return DataModelHandle(model);
 }
 
+bool DataModelConstructor::RegisterConstant(const String& name, Variant variant)
+{
+	return model->RegisterConstant(name, variant);
+}
+
 bool DataModelConstructor::BindFunc(const String& name, DataGetFunc get_func, DataSetFunc set_func)
 {
 	return model->BindFunc(name, std::move(get_func), std::move(set_func));

@@ -258,6 +258,10 @@ DataAddress DataModel::ResolveAddress(const String& address_str, Element* elemen
 
 	const String& first_name = address.front().name;
 
+	if (auto it = constants.find(first_name); it != constants.end()) {
+		return address;
+	}
+
 	auto it = variables.find(first_name);
 	if (it != variables.end())
 		return address;
@@ -337,8 +341,22 @@ const DataEventFunc* DataModel::GetEventCallback(const String& name)
 	return &it->second;
 }
 
+bool DataModel::RegisterConstant(const String& name, Variant variant) {
+	auto [val, inserted] = constants.insert({name, variant});
+	return inserted;
+}
+
 bool DataModel::GetVariableInto(const DataAddress& address, Variant& out_value) const
 {
+	// allow for finding constant variants
+	if (address.size() == 1) {
+		auto itr = constants.find(address.front().name);
+		if (itr != constants.end()) {
+			out_value = itr->second;
+			return true;
+		}
+	}
+
 	DataVariable variable = GetVariable(address);
 	bool result = (variable && variable.Get(out_value));
 	if (!result)
