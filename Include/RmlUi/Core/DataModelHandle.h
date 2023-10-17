@@ -100,6 +100,9 @@ public:
 	template <typename T>
 	bool RegisterScalar(DataTypeGetFunc<T> get_func, DataTypeSetFunc<T> set_func = {});
 
+	// Register a variant variable that cannot be set
+	bool RegisterConstant(const String& name, Variant variant);
+
 	// Register a struct type.
 	// @note The type applies to every data model associated with the current Context.
 	// @return A handle which can be used to register struct members.
