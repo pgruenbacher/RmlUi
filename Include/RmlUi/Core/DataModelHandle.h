@@ -144,8 +144,8 @@ template <typename T>
 inline bool DataModelConstructor::RegisterScalar(DataTypeGetFunc<T> get_func, DataTypeSetFunc<T> set_func)
 {
 	// Though enum is builtin scalar type, we allow custom getter/setter on it.
-	static_assert(!is_builtin_data_scalar<T>::value || std::is_enum<T>::value,
-		"Cannot register scalar data type function. Arithmetic types and String are handled internally and does not need to be registered.");
+	// static_assert(!is_builtin_data_scalar<T>::value || std::is_enum<T>::value,
+	// 	"Cannot register scalar data type function. Arithmetic types and String are handled internally and does not need to be registered.");
 	const FamilyId id = Family<T>::Id();
 
 	auto scalar_func_definition = Rml::MakeUnique<ScalarFuncDefinition<T>>(get_func, set_func);
