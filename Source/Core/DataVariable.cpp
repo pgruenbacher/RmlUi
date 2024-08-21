@@ -120,7 +120,8 @@ void StructDefinition::AddMember(const String& name, UniquePtr<VariableDefinitio
 {
 	RMLUI_ASSERT(member);
 	bool inserted = members.emplace(name, std::move(member)).second;
-	RMLUI_ASSERTMSG(inserted, "Member name already exists.");
+	auto message = String("Member name already exists: ") + name;
+	RMLUI_ASSERTMSG(inserted, message.c_str());
 	(void)inserted;
 }
 
