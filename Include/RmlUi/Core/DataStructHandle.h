@@ -32,6 +32,7 @@
 #include "DataTypeRegister.h"
 #include "DataTypes.h"
 #include "DataVariable.h"
+#include <cassert>
 #include "Header.h"
 #include "Traits.h"
 #include "Types.h"
@@ -109,7 +110,7 @@ public:
 	explicit operator bool() const { return type_register && struct_definition; }
 
 
-private:
+public:
 	// Member getter with reference return type.
 	template <typename ReturnType>
 	bool RegisterMemberGetter(const String& name, ReturnType& (Object::*member_get_func_ptr)())
@@ -216,6 +217,7 @@ bool StructHandle<Object>::CreateMemberScalarGetSetFuncDefinition(const String& 
 		RMLUI_LOG_TYPE_ERROR(UnderlyingType,
 			"Only scalar data variables are allowed here. Data member functions require scalar types when returning by value, or using getter/setter "
 			"function pairs.");
+		assert(false);
 		return false;
 	}
 
