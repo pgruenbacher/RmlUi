@@ -160,12 +160,15 @@ public:
 		VariableDefinition(DataVariableType::Array), underlying_definition(underlying_definition)
 	{}
 
-	int Size(void* ptr) override { return int(static_cast<Container*>(ptr)->size()); }
+	int Size(void* ptr) override { 
+		if (!ptr) return 0;
+		return int(static_cast<Container*>(ptr)->size()); }
 
 protected:
 	DataVariable Child(void* void_ptr, const DataAddressEntry& address) override
 	{
 		Container* ptr = static_cast<Container*>(void_ptr);
+		if (!ptr) return DataVariable();
 		const int index = address.index;
 
 		const int container_size = int(ptr->size());
