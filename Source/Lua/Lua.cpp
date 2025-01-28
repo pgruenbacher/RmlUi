@@ -38,9 +38,18 @@ void Initialise()
 	::Rml::Lua::Initialise(nullptr);
 }
 
+static LuaPlugin* s_plugin = nullptr;
+
+void ResetState(lua_State* lua_state) {
+	RMLUI_ASSERT(s_plugin);
+	s_plugin->resetState(lua_state);
+}
+
 void Initialise(lua_State* lua_state)
 {
-	::Rml::RegisterPlugin(new LuaPlugin(lua_state));
+
+	s_plugin = new LuaPlugin(lua_state);
+	::Rml::RegisterPlugin(s_plugin);
 }
 
 } // namespace Lua

@@ -73,6 +73,13 @@ static lua_State* g_L = nullptr;
 @remark This is called automatically by LuaPlugin::OnInitialise(). */
 static void RegisterTypes();
 
+void LuaPlugin::resetState(lua_State* lua_state) {
+	RMLUI_ASSERT(!owns_lua_state);
+	g_L = lua_state;
+
+	RegisterTypes();
+}
+
 LuaPlugin::LuaPlugin(lua_State* lua_state)
 {
 	RMLUI_ASSERT(g_L == nullptr);

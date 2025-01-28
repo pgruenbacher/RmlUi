@@ -46,6 +46,7 @@ namespace Lua {
 	   responsible for closing the provided Lua state. The state must then be closed after the call to Rml::Shutdown().
 	 @remark The plugin registers the "body" tag to generate a LuaDocument rather than a ElementDocument. */
 	RMLUILUA_API void Initialise(lua_State* L);
+	RMLUILUA_API void ResetState(lua_State* L);
 
 } // namespace Lua
 } // namespace Rml

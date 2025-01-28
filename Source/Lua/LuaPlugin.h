@@ -49,6 +49,7 @@ class LuaEventListenerInstancer;
 class RMLUILUA_API LuaPlugin : public Plugin {
 public:
 	LuaPlugin(lua_State* lua_state);
+	void resetState(lua_State* lua_state);
 
 	static lua_State* GetLuaState();
 
