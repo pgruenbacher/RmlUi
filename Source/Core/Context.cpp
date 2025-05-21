@@ -47,6 +47,7 @@
 #include <algorithm>
 #include <iterator>
 #include <limits>
+#include <iostream>
 
 namespace Rml {
 
@@ -618,7 +619,8 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 
 	bool propagate = true;
 
-	if (button_index == 0)
+	// allow for right-click too... -paul
+	if (button_index == 0 || button_index == 1)
 	{
 		Element* new_focus = hover;
 
@@ -725,7 +727,7 @@ bool Context::ProcessMouseButtonUp(int button_index, int key_modifier_state)
 	const bool result = !IsMouseInteracting();
 
 	// Process primary click.
-	if (button_index == 0)
+	if (button_index == 0 || button_index == 1)
 	{
 		// The elements in the new hover chain have the 'onmouseup' event called on them.
 		if (hover)
